@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 
 type Message = {
     id: number;
@@ -63,29 +64,34 @@ function App() {
     };
 
     return (
-        <div>
-            <h1>INTEQ Chatbot</h1>
+        <div className="app">
+            <div className="chat-container">
+                <h1>INTEQ Chatbot</h1>
 
-            <div>
-                {messages.map((m) => (
-                    <p key={m.id}>{m.text}</p>
-                ))}
-            </div>
+                <div className="messages">
+                    {messages.map((message) => (
+                        <div key={message.id} className={`message ${message.role}`}>
+                            {message.text}
+                        </div>
+                    ))}
+                </div>
 
-            <div>
-                <input
-                    placeholder="Type your message..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            sendMessage();
-                        }
-                    }}
-                />
-                <button onClick={sendMessage} disabled={loading}>
-                    {loading ? "Sending..." : "Send"}
-                </button>
+                <div className="input-row">
+                    <input
+                        type="text"
+                        placeholder="Type your message..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                sendMessage();
+                            }
+                        }}
+                    />
+                    <button onClick={sendMessage} disabled={loading}>
+                        {loading ? "Sending..." : "Send"}
+                    </button>
+                </div>
             </div>
         </div>
     );
