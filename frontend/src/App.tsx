@@ -13,6 +13,20 @@ function App() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const sendMessage = () => {
+        const trimmed = input.trim();
+        if (!trimmed || loading) return;
+
+        const userMessage: Message = {
+            id: Date.now(),
+            role: "user",
+            text: trimmed,
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setInput("");
+    };
+
     return (
         <div>
             <h1>INTEQ Chatbot</h1>
@@ -28,7 +42,9 @@ function App() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />
-                <button disabled={loading}>Send</button>
+                <button onClick={sendMessage} disabled={loading}>
+                    Send
+                </button>
             </div>
         </div>
     );
