@@ -74,8 +74,14 @@ function App() {
 
             <div>
                 <input
+                    placeholder="Type your message..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            sendMessage();
+                        }
+                    }}
                 />
                 <button onClick={sendMessage} disabled={loading}>
                     {loading ? "Sending..." : "Send"}
