@@ -1,16 +1,37 @@
+import { useState } from "react";
+
+type Message = {
+    id: number;
+    role: "user" | "bot";
+    text: string;
+};
+
 function App() {
-  return (
-      <div>
-        <h1>INTEQ Chatbot</h1>
+    const [messages, setMessages] = useState<Message[]>([
+        { id: 1, role: "bot", text: "Hi! I am your chatbot." },
+    ]);
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    return (
         <div>
-          <p>Hi! I am your chatbot.</p>
+            <h1>INTEQ Chatbot</h1>
+
+            <div>
+                {messages.map((m) => (
+                    <p key={m.id}>{m.text}</p>
+                ))}
+            </div>
+
+            <div>
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                <button disabled={loading}>Send</button>
+            </div>
         </div>
-        <div>
-          <input type="text" />
-          <button>Send</button>
-        </div>
-      </div>
-  );
+    );
 }
 
 export default App;
