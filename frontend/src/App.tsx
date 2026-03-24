@@ -13,7 +13,7 @@ function App() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         const trimmed = input.trim();
         if (!trimmed || loading) return;
 
@@ -25,6 +25,24 @@ function App() {
 
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
+
+        const response = await fetch("http://localhost:8000/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message: trimmed }),
+        });
+
+        const data = await response.json();
+
+        const botMessage: Message = {
+            id: Date.now() + 1,
+            role: "bot",
+            text: data.reply,
+        };
+
+        setMessages((prev) => [...prev, botMessage]);
     };
 
     return (
