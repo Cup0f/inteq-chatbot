@@ -25,24 +25,41 @@ function App() {
 
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
+        setLoading(true);
+        
+        try {
+            const response = await fetch("http://localhost:8000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message: trimmed }),
+            });
 
-        const response = await fetch("http://localhost:8000/chat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ message: trimmed }),
-        });
+            if (!response.ok) {
+                throw new Error("Request failed");
+            }
 
-        const data = await response.json();
+            const data: { reply: string } = await response.json();
 
-        const botMessage: Message = {
-            id: Date.now() + 1,
-            role: "bot",
-            text: data.reply,
-        };
+            const botMessage: Message = {
+                id: Date.now() + 1,
+                role: "bot",
+                text: data.reply,
+            };
 
-        setMessages((prev) => [...prev, botMessage]);
+            setMessages((prev) => [...prev, botMessage]);
+        } catch {
+            const errorMessage: Message = {
+                id: Date.now() + 1,
+                role: "bot",
+                text: "Sorry, something went wrong.",
+            };
+            
+            setMessages((prev) => [...prev, errorMessage]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -61,7 +78,7 @@ function App() {
                     onChange={(e) => setInput(e.target.value)}
                 />
                 <button onClick={sendMessage} disabled={loading}>
-                    Send
+                    {loading ? "Sending..." : "Send"}
                 </button>
             </div>
         </div>
